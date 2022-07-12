@@ -17,6 +17,7 @@ library(patchwork)
 library(plotly)
 library(gganimate)
 library(gifski)
+library(stringr)
 source("R/funcao_tema_graficos.R")
 
 # Carregamento das paletas de cores
@@ -666,8 +667,6 @@ volumes_expo_ton_mes <- expo |>
    summarise(volumes_kg = sum(peso_liquido_expo_kg), volumes_ton = volumes_kg/1000) |> 
    mutate(ano_desembaraco = as.factor(ano_desembaraco), mes_desembaraco = as.numeric(mes_desembaraco))
 
-###################################### CONTINUAR DAQUI ########################################
-
 
 # gráfico dinâmico do fluxo do porto de santa helena
 anim_expo_mes <- volumes_expo_ton_mes |> 
@@ -726,8 +725,150 @@ plot6_e
 
 
 # Quantidade de dues por ano e mes
+
+paleta_cores_canal <- c("#FF9B42", "#4A7856", "#EF233C")
 num_due_mes <- expo |> 
-   group_by(ano_desembaraco, mes_desembaraco) |> 
-   summarise(qtde_mes = n()) |> 
-   View()
+   mutate(canal = stringr::str_to_lower(canal)) |>  
+   select(ano_desembaraco, canal, mes_desembaraco) |> 
+   group_by(ano_desembaraco, canal) |> 
+   summarise(qte_canal = n())
+
+plot11 <- num_due_mes |> 
+   ggplot()+
+   aes(x = canal, y = qte_canal, label = qte_canal, fill = canal)+
+   geom_col()+ 
+   facet_wrap(~ano_desembaraco)+
+   scale_fill_manual(values = paleta_cores)+
+   geom_label(vjust = -0.3, show.legend = FALSE)+
+   theme_enem_fundo_branco()+
+   labs(
+      title = "Canais de parametrização",
+      subtitle = "Número de processos por canal de conferência",
+      x = "",
+      y = ""
+   )+
+   scale_y_continuous(
+      limits = c(0,900)
+   )
+   
+
+# Quantidade de dues por ano e mes
+
+paleta_cores_canal <- c("#FF9B42", "#4A7856", "#EF233C")
+num_due_mes <- expo |> 
+   mutate(canal = stringr::str_to_lower(canal)) |>  
+   select(ano_desembaraco, canal, mes_desembaraco) |> 
+   group_by(ano_desembaraco, canal) |> 
+   summarise(qte_canal = n())
+
+plot11 <- num_due_mes |> 
+   ggplot()+
+   aes(x = canal, y = qte_canal, label = qte_canal, fill = canal)+
+   geom_col()+ 
+   facet_wrap(~ano_desembaraco)+
+   scale_fill_manual(values = paleta_cores_canal)+
+   geom_label(vjust = -0.3, show.legend = FALSE)+
+   theme_enem_fundo_branco()+
+   labs(
+      title = "Canais de parametrização",
+      subtitle = "Número de processos por canal de conferência",
+      x = "",
+      y = ""
+   )+
+   scale_y_continuous(
+      limits = c(0,900)
+   )
+
+
+plot11
+
+
+############################################ BAGAGEM ##########################################
+
+# análise do total de pessoas que cruzam a fronteira
+qte_pessoas <- read_xlsx("data-raw/quantidade_pessoas.xlsx")
+
+qte_pessoas |> 
+   group_by(ano) |> 
+   summarize(saida = sum(qte_saida),
+             entrada = sum(qte_entrada)
+             ) |> 
+   mutate(ano = as.numeric(ano)) |> 
+   pivot_longer(cols = c(saida, entrada),
+                names_to = "Fluxo",
+                values_to = "movimento") |> 
+   ggplot()+
+   aes(x = ano, y = movimento, fill = Fluxo, label = movimento)+
+   geom_line()+
+   geom_point(size = 4)+
+   geom_label_repel(show.legend = NA)+
+   annotate("text",
+            x = 2020.8,
+            y = 7500, 
+            label = "Fronteira fechada entre abril/2020 a abril/2021 ")+
+   labs(
+      title = "Entradas e saídas de pessoas",
+      x = "",
+      y = ""
+      )+
+   theme_enem_fundo_branco()
+
+# quantidade de veículos de passeio que cruzam a fronteira
+
+qte_veiculos <- read_xlsx("data-raw/quantidade_veiculos.xlsx")
+
+qte_veiculos |> 
+   group_by(ano) |> 
+   summarize(saida = sum(qte_saida),
+             entrada = sum(qte_entrada)
+   ) |> 
+   mutate(ano = as.numeric(ano)) |> 
+   pivot_longer(cols = c(saida, entrada),
+                names_to = "Fluxo_veiculos",
+                values_to = "movimento") |> 
+   ggplot()+
+   aes(x = ano, y = movimento, fill = Fluxo_veiculos, label = movimento)+
+   geom_line()+
+   geom_point(size = 4)+
+   geom_label_repel(show.legend = NA)+
+   annotate("text",
+            x = 2020.8,
+            y = 1500, 
+            label = "Fronteira fechada entre abril/2020 a abril/2021 ")+
+   labs(
+      title = "Entradas e saídas de veículos",
+      x = "",
+      y = ""
+   )+
+   theme_enem_fundo_branco()
+
+
+# quantidade de veículos de carga que cruzam a fronteira
+
+qte_veiculos_carga <- read_xlsx("data-raw/quantidade_veiculos_carga.xlsx")
+
+qte_veiculos_carga |> 
+   group_by(ano) |> 
+   summarize(saida = sum(qte_saida),
+             entrada = sum(qte_entrada)
+   ) |> 
+   mutate(ano = as.numeric(ano)) |> 
+   pivot_longer(cols = c(saida, entrada),
+                names_to = "Fluxo_veiculos",
+                values_to = "movimento") |> 
+   ggplot()+
+   aes(x = ano, y = movimento, fill = Fluxo_veiculos, label = movimento)+
+   geom_line()+
+   geom_point(size = 4)+
+   geom_label_repel(show.legend = NA)+
+   annotate("text",
+            x = 2020.5,
+            y = 200, 
+            label = "Fronteira fechada entre abril/2020 a abril/2021 ")+
+   labs(
+      title = "Entradas e saídas de veículos de carga",
+      x = "",
+      y = ""
+   )+
+   theme_enem_fundo_branco()
 
