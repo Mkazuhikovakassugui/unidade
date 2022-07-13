@@ -862,13 +862,14 @@ qte_veiculos_carga |>
    geom_point(size = 4)+
    geom_label_repel(show.legend = NA)+
    annotate("text",
-            x = 2020.5,
-            y = 200, 
-            label = "Fronteira fechada entre abril/2020 a abril/2021 ")+
+            x = 2019.5,
+            y = 22000, 
+            label = "Obs: durante a pandemia as atividades de importação e exportação não foram interrompidas ")+
    labs(
       title = "Entradas e saídas de veículos de carga",
       x = "",
       y = ""
    )+
-   theme_enem_fundo_branco()
+   theme_enem_fundo_branco()+
+   scale_y_continuous(limits = c(0, 22000))
 
