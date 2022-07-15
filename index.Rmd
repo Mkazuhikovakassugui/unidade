@@ -3,10 +3,10 @@ title: "ACI - Santa Helena/PR"
 subtitle: "Visão Geral"  
 author: 
   - "Inspetoria de Santa Helena/PR"
-date: '14-07-2022'
+date: '15-07-2022'
 encoding: "utf8"
 output:
-  xaringan::moon_reader:
+   xaringan::moon_reader:
     lib_dir: libs
     chakra: libs/remark-latest.min.js
     css: custom.css
@@ -93,25 +93,36 @@ impo <- read_xlsx("importacao/importacao_acumulada.xlsx")
 ---
 
 ### Área de Controle Integrado
+--
 
-- Inaugurada em 12 de dezembro de 2002;
+- Inaugurada em 12 de dezembro de 2002; 
 
-- Tipo de cabeceira única;
-- Integrada na modalidade cargas e na modalidade transporte vicinal e turismo.
+- Tipo cabeceira única;
+
+- Integrada na modalidade cargas;
+
+- Integrada na modalidade transporte vicinal e turismo.
+
+--
 
 - Órgãos brasileiros:
 
- - Secretaria da Receita Federal do Brasil (SRFB);
- - Departamento de Polícia Federal (DPF);
- - Ministério da Agricultura, Pecuária e Abastecimento (MAPA).
+--
+
+      - Secretaria da Receita Federal do Brasil (SRFB);
+      - Departamento de Polícia Federal (DPF);
+      - Ministério da Agricultura, Pecuária e Abastecimento (MAPA).
+      
+--
  
 - Órgãos paraguaios:
 
- - Dirección Nacional de Aduanas (DNA);
- - Secretaria Nacional de Calidad y Sanidad Vegetal y de Semillas (SENAVE);
- - Migraciones;
- - Dirección Nacional de Transporte (DINATRAN).
+--
 
+      - Dirección Nacional de Aduanas (DNA);
+      - Secretaria Nacional de Calidad y Sanidad Vegetal y de Semillas (SENAVE);
+      - Migraciones;
+      - Dirección Nacional de Transporte (DINATRAN).
 
 ---
 class: inverse center middle
@@ -800,49 +811,6 @@ plot10
 .footnote[*Gráfico 10 - Número de DUE's no período de 2019 a 2022*. _**Fonte**_: *IRF/SHA*]
 
 ---
-### Distribuição da parametrização
-
-```{r label=}
-#| echo = FALSE,
-#| fig.dim = c(14,6),
-#| fig.align = "center"
-
-# Quantidade de dues por ano e mes
-
-paleta_cores_canal <- c("#FF9B42", "#4A7856", "#EF233C")
-num_due_mes <- expo |> 
-   mutate(canal = stringr::str_to_lower(canal)) |>  
-   select(ano_desembaraco, canal, mes_desembaraco) |> 
-   group_by(ano_desembaraco, canal) |> 
-   summarise(qte_canal = n())
-
-plot11 <- num_due_mes |> 
-   ggplot()+
-   aes(x = canal, y = qte_canal, label = qte_canal, fill = canal)+
-   geom_col()+ 
-   facet_wrap(~ano_desembaraco)+
-   scale_fill_manual(values = paleta_cores_canal)+
-   geom_label(vjust = -0.3, show.legend = FALSE)+
-   theme_enem_fundo_branco()+
-   labs(
-      title = "Canais de parametrização",
-      subtitle = "Número de processos por canal de conferência",
-      x = "",
-      y = ""
-   )+
-   scale_y_continuous(
-      limits = c(0,900)
-   )
-   
-
-plot11
-
-
-```
-.footnote[*Gráfico 11 - Distribuições de canais na exportação*. _**Fonte**_: *IRF/SHA*]
-
-
----
 class: inverse center middle
 
 # Fluxo de pessoas e veículos
@@ -886,7 +854,7 @@ plot11
 
 ```
 
-.footnote[*Gráfico 12 - Viajantes que cruzam a fronteira*. _**Fonte**_: *IRF/SHA*]
+.footnote[*Gráfico 11 - Viajantes que cruzam a fronteira*. _**Fonte**_: *IRF/SHA*]
 
 
 ---
@@ -928,7 +896,7 @@ plot12
 
 ```
 
-.footnote[*Gráfico 13 - Veículos de passeio que cruzam a fronteira*. _**Fonte**_: *IRF/SHA*]
+.footnote[*Gráfico 12 - Veículos de passeio que cruzam a fronteira*. _**Fonte**_: *IRF/SHA*]
 
 
 ---
@@ -970,13 +938,10 @@ plot13 <- qte_veiculos_carga |>
 plot13
 ```
 
-.footnote[*Gráfico 14 - Veículos de carga que cruzam a fronteira*. _**Fonte**_: *IRF/SHA*]
+.footnote[*Gráfico 13 - Veículos de carga que cruzam a fronteira*. _**Fonte**_: *IRF/SHA*]
 ---
 class: center, middle
 
 # Obrigado!
 
 
-Esta apresentação está disponível em:
-
-https://mkazuhikovakassugui.github.io/unidade/#1

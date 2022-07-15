@@ -36,6 +36,8 @@ paleta_5_cores_impo_vol <- c("#AE2030", "#8B4095", "#6A5E68", "#F2A519", "#28B46
 
 impo <- read_xlsx("importacao/importacao_acumulada.xlsx")
 
+expo <- read_csv("data/expo.csv")
+
 
 # gráfico volumes de importação por ano -----------------------------------------------
 # base
@@ -176,7 +178,6 @@ plot2_a <- mercadoria_vol_per |>
    scale_fill_manual(values = paleta_4_cores_impo_vol)
    
 plot2_a
-
 
 
 # gráfico de volume de mercadorias por ano na importação (anos de 2019, 2020, 2021, 2022)
@@ -472,7 +473,6 @@ plot6_i <- num_di |>
    scale_fill_manual(values = paleta_4_cores_impo_vol)
 
 plot6_i
-
 
 
 ############################################EXPORTACAO#########################################
@@ -813,6 +813,26 @@ qte_pessoas |>
       )+
    theme_enem_fundo_branco()
 
+
+# média de pessoas por mês
+media_pessoas_mes <- qte_pessoas |> 
+   group_by(ano, mês) |> 
+   mutate(total_pessoas = (qte_saida + qte_entrada)) |> 
+   summarise(media_pessoas = round(mean(total_pessoas),2)) |> 
+   ggplot()+
+   aes(x = mês, y = media_pessoas, fill = ano, label = media_pessoas)+
+   geom_col(position = "dodge")+
+   geom_label(position = position_dodge(width = 1))+
+   theme_enem()+
+   labs(
+      title = "media de pessoas por ano",
+      x = "",
+      y = ""
+   )
+   
+media_pessoas_mes 
+
+
 # quantidade de veículos de passeio que cruzam a fronteira
 
 qte_veiculos <- read_xlsx("data-raw/quantidade_veiculos.xlsx")
@@ -873,3 +893,112 @@ qte_veiculos_carga |>
    theme_enem_fundo_branco()+
    scale_y_continuous(limits = c(0, 22000))
 
+
+################################# ANÁLISES EXTRAS #############################################
+
+# volume de importação por mês no ano de 2020
+
+vol_impo_2020_mes <- impo |> 
+   filter(ano == "2020") |> 
+   select(mes, valor, peso) |> 
+   group_by(mes) |> 
+   summarise(volume = sum(peso)) |> 
+   #mutate(mes = as.factor(mes)) |> 
+   ggplot()+
+   aes(x = mes, y = volume, color = volume, label = volume)+
+   geom_line()+
+   geom_point(size = 2)+
+   #theme(legend.position = "none")+
+   geom_label(
+      alpha = 0,
+      vjust = -1
+   )+
+   theme_enem_fundo_branco()+
+   labs(
+      title = "Volume mensal da importação por mês no ano de 2020",
+      x = "",
+      y = ""
+   )
+pextra_1
+
+
+# volume de importação por mês no ano de 2021
+
+pextra_2 <- impo |> 
+   filter(ano == "2021") |> 
+   select(mes, valor, peso) |> 
+   group_by(mes) |> 
+   summarise(volume = sum(peso)) |> 
+   #mutate(mes = as.factor(mes)) |> 
+   ggplot()+
+   aes(x = mes, y = volume, color = volume, label = volume)+
+   geom_line()+
+   geom_point(size = 2)+
+   #theme(legend.position = "none")+
+   geom_label(
+      alpha = 0,
+      vjust = -1
+   )+
+   theme_enem_fundo_branco()+
+   labs(
+      title = "Volume mensal da importação por mês no ano de 2021",
+      x = "",
+      y = ""
+   )
+  
+pextra_2
+
+# volume de importação por mês no ano de 2022
+
+pextra_3 <- impo |> 
+   filter(ano == "2022") |> 
+   select(mes, valor, peso) |> 
+   group_by(mes) |> 
+   summarise(volume = sum(peso)) |> 
+   #mutate(mes = as.factor(mes)) |> 
+   ggplot()+
+   aes(x = mes, y = volume, color = volume, label = volume)+
+   geom_line()+
+   geom_point(size = 2)+
+   #theme(legend.position = "none")+
+   geom_label(
+      alpha = 0,
+      vjust = -1
+   )+
+   theme_enem_fundo_branco()+
+   labs(
+      title = "Volume mensal da importação por mês no ano de 2022",
+      x = "",
+      y = ""
+   )
+
+pextra_3
+
+
+
+# VOLUME MENSAL POR MES NA EXPORTAÇÃO
+
+# volume de importação por mês no ano de 2020
+
+pextra_1e <- expo |> 
+   filter(ano_desembaraco == "2020") |> 
+   select(mes_desembaraco, vmle_dolar_expo, peso) |> 
+   group_by(mes_desembaraco) |> 
+   summarise(volume = sum(peso)) |> 
+   #mutate(mes = as.factor(mes)) |> 
+   ggplot()+
+   aes(x = mes_desembaraco, y = volume, color = volume, label = volume)+
+   geom_line()+
+   geom_point(size = 2)+
+   #theme(legend.position = "none")+
+   geom_label(
+      alpha = 0,
+      vjust = -1
+   )+
+   theme_enem_fundo_branco()+
+   labs(
+      title = "Volume mensal da exportação por mês no ano de 2020",
+      x = "",
+      y = ""
+   )
+pextra_1
